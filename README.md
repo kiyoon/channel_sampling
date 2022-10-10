@@ -1,104 +1,12 @@
-## This reposity contains official implementation of:
-- [Capturing Temporal Information in a Single Frame: Channel Sampling Strategies for Action Recognition](http://arxiv.org/abs/2201.10394) (Kim et al., 2022)
-<img src="https://user-images.githubusercontent.com/12980409/151038213-12bdad91-7895-40e7-9304-126079fed637.png" alt="8-frame TC Reordering" width="400">
+# Capturing Temporal Information in a Single Frame: Channel Sampling Strategies for Action Recognition
 
-- An Action Is Worth Multiple Words: Handling Ambiguity in Action Recognition (Kim et al., 2022) [`Instruction`](docs/projects/verb_ambiguity)
-<img src="https://user-images.githubusercontent.com/12980409/193856345-e0287624-4c84-46af-b245-c07ff263c424.png" alt="Verb Ambiguity" width="400">
+Kiyoon Kim, Shreyank N Gowda, Oisin Mac Aodha, Laura Sevilla-Lara  
+In BMVC 2022. [`arXiv`](http://arxiv.org/abs/2201.10394)
 
-# PyVideoAI: Action Recognition Framework
+<img src="https://user-images.githubusercontent.com/12980409/151038213-12bdad91-7895-40e7-9304-126079fed637.png" alt="8-frame TC Reordering" width="800">  
+<img src="https://user-images.githubusercontent.com/12980409/151038200-6f32cea8-6a2b-40bf-9d95-50ba860114be.png" alt="3-frame GrayST" width="800">  
 
-The only framework that completes your computer vision, action recognition research environment.  
-
-** Key features **  
-- Supports multi-gpu, multi-node training.  
-- STOA models such as I3D, Non-local, TSN, TRN, TSM, MVFNet, ..., and even ImageNet training!
-- Many datasets such as Kinetics-400, EPIC-Kitchens-55, Something-Something-V1/V2, HMDB-51, UCF-101, Diving48, CATER, ...
-- Supports both video decoding (straight from .avi/mp4) and frame extracted (.jpg/png) dataloaders, sparse-sample and dense-sample.
-- Any popular LR scheduling like Cosine Annealing with Warm Restart, Step LR, and Reduce LR on Plateau.
-- Early stopping when training doesn't improve (customise your condition)
-- **Easily add custom model, optimiser, scheduler, loss and dataloader!**
-- Telegram bot reporting experiment status.  
-- TensorBoard reporting stats.  
-- Colour logging  
-- All of the above come with no extra setup. Trust me and try some [examples](https://github.com/kiyoon/PyVideoAI-examples.git).
-
-** Papers implemented **
-- \[Official\] *TC Reordering* and *GrayST* (Kim et al. 2022).  
-- [*ProSelfLC* (CVPR 2021)](https://arxiv.org/abs/2005.03788).  
-
-
-This package is motivated by PySlowFast from Facebook AI. The PySlowFast is a cool framework, but it depends too much on their config system and it was difficult to add new models (other codes) or reuse part of the modules from the framework.  
-This framework by Kiyoon, is designed to replace all the configuration systems to Python files, which enables **easy-addition of custom models/LR scheduling/dataloader** etc.  
-Just modify the function bodies in the config files!
-
-Difference between the two config systems can be found in [CONFIG_SYSTEM.md](docs/CONFIG_SYSTEM.md).
-
-# Getting Started
-Jupyter Notebook examples to run:  
-- HMDB-51 data preparation
-- Inference on pre-trained model from the model zoo, and visualise model/dataloader/per-class performance.
-- Training I3D using Kinetics pretrained model
-- Using image model and ImageNet dataset  
-
-is provided in the [examples](https://github.com/kiyoon/PyVideoAI-examples)!
-
-
-# Structure
-
-All of the executable files are in `tools/`.  
-`dataset_configs/` directory configures datasets. For example, where is the dataset stored, number of classes, single-label or multi-label training, dataset-specific visualisation settings (confusion matrix has different output sizes)  
-`model_configs/` directory configures model architectures. For example, model definition, input preprocessing mean/std.  
-`exp_configs/` directory configures other training settings like optimiser, scheduling, dataloader, number of frames as input. The config file path has to be in `exp_configs/[dataset_name]/[model_name]_[experiment_name].py` format.
-
-# Usage
-
-## Preparing datasets
-
-This package supports many action recognition datasets such as HMDB-51, EPIC-Kitchens-55, Something-Something-V1, CATER, etc.  
-Refer to [DATASET.md](docs/DATASET.md).
-
-## Training command
-```bash
-# Single GPU
-CUDA_VISIBLE_DEVICES=0 python tools/run_singlenode.sh train 1 -D {dataset_config_name} -M {model_config_name} -E {exp_config_name}
-# Multi GPUs, single node
-CUDA_VISIBLE_DEVICES=0,1,2,3 python tools/run_singlenode.sh train {num_gpus} -D {dataset_config_name} -M {model_config_name} -E {exp_config_name}
-# Multi GPU, multi node (run on every node)
-CUDA_VISIBLE_DEVICES=0,1,2,3 python tools/run_multinode.sh train {num_gpus_per_node} {num_nodes} {node_rank} {master_address} {master_port} -D {dataset_config_name} -M {model_config_name} -E {exp_config_name}
-```
-
-## Telegram Bot
-You can preview experiment results using Telegram bots!  
-<img src="https://user-images.githubusercontent.com/12980409/122335586-7cb10a80-cf76-11eb-950f-af08c20055d4.png" alt="Telegram bot stat report example" width="400">
-
-If your code raises an exception, it will report you too.  
-<img src="https://user-images.githubusercontent.com/12980409/122337458-5476db00-cf79-11eb-8d71-3e8ecc9faa9a.png" alt="Telegram error report example" width="400">
-
-You can quickly take a look at example video inputs (as GIF or JPEGs) from the dataloader.  
-Use [tools/visualisations/model_and_dataloader_visualiser.py](tools/visualisations/model_and_dataloader_visualiser.py)  
-<img src="https://user-images.githubusercontent.com/12980409/122337617-8a1bc400-cf79-11eb-8c48-b0d52a2c49c5.png" alt="Telegram video input report example" width="200">
-
-
-
-- Talk to BotFather and make a bot.  
-- Go to your bot and type anything (/start)  
-- Find chat_id at https://api.telegram.org/bot{token}/getUpdates (replace {token} with your token, excluding braces.)  
-- Add your token and chat_id to `tools/key.ini`.  
-
-```INI
-[Telegram0]
-token=
-chat_id=
-```
-
-
-# Model Zoo and Baselines
-Refer to [MODEL_ZOO.md](docs/MODEL_ZOO.md)
-
-# Installation
-Refer to [INSTALL.md](docs/INSTALL.md).
-
-TL;DR,
+## Installation
 
 ```bash
 conda create -n videoai python=3.9
@@ -108,9 +16,8 @@ conda install pytorch==1.12.1 torchvision cudatoolkit=10.2 -c pytorch
 #conda install pytorch==1.12.1 torchvision cudatoolkit=11.3 -c pytorch
  
 
-git clone --recurse-submodules https://github.com/kiyoon/PyVideoAI.git
-cd PyVideoAI
-git checkout v0.4
+git clone --recurse-submodules https://github.com/kiyoon/channel_sampling
+cd channel_sampling
 git submodule update --recursive
 cd submodules/video_datasets_api
 pip install -e .
@@ -131,8 +38,98 @@ CFLAGS="${CFLAGS} -mavx2" pip install --upgrade --no-cache-dir --force-reinstall
 conda install -y jpeg libtiff
 ```
 
-# Experiment outputs
+## Getting started
 
-The experiment results (log, training stats, weights, tensorboard, plots, etc.) are saved to `data/experiments` by default. This can be huge, so make sure you **make a softlink of a directory you really want to use. (recommended)**  
+### Preparing the datasets
+#### Something-Something-V1
+1. Download the dataset and annotations. Rename the directories into `frames` and `annotations`, and put them in `data/something-something-v1`.
+2. Generate splits.
 
-Otherwise, you can change `pyvideoai/config.py`'s `DEFAULT_EXPERIMENT_ROOT` value. Or, you can also set `--experiment_root`/`-R` argument manually when executing.  
+```bash
+conda activate videoai
+python tools/datasets/generate_somethingv1_splits.py data/something-something-v1/splits_frames data/something-something-v1/annotations --root data/something-something-v1/frames --mode frames
+```
+
+#### Something-Something-V2
+1. Download the dataset and annotations. Rename the directories into `videos` and `annotations`, and put them in `data/something-something-v2`.
+2. Extract videos into frames of images, to folder `data/something-something-v2/frames_q5`.
+
+```bash
+submodules/video_datasets_api/tools/something-something-v2/extract_frames.sh data/something-something-v2/videos data/something-something-v2/frames_q5
+```
+
+3. Generate splits.
+
+```bash
+conda activate videoai
+python tools/datasets/generate_somethingv2_splits.py data/something-something-v2/splits_frames data/something-something-v2/annotations data/something-something-v2/frames_q5 --mode frames
+```
+
+### About the paper
+- Core implementation of reordering methods is in [`pyvideoai/utils/tc_reordering.py`](./pyvideoai/utils/tc_reordering.py).  
+- See [`exp_configs/ch_tcgrey`](./exp_configs/ch_tcgrey) for experiment settings.  
+For example, in order to run TSM model, GreyST method on the Something-Something-V1 dataset, you should run [`exp_configs/ch_tcgrey/something_v1/tsm_resnet50_nopartialbn-GreyST_8frame.py`](./exp_configs/ch_tcgrey/something_v1/tsm_resnet50_nopartialbn-GreyST_8frame.py), the command of which would be:
+
+```bash
+# Run training
+tools/run_singlenode.sh train 4 -R ~/experiment_root -D something_v1 -M tsm_resnet_nopartialbn -E GreyST_8frame -c:e tcgrey
+# Run evaluation
+tools/run_singlenode.sh eval 4 -R ~/experiment_root -D something_v1 -M tsm_resnet_nopartialbn -E GreyST_8frame -c:e tcgrey
+```
+
+#### Once you prepared the datasets, just modify the script below and run.  
+```bash
+#!/bin/bash
+exp_root="$HOME/experiments"  # Experiment results will be saved here.
+
+export CUDA_VISIBLE_DEVICES=0
+num_gpus=1
+
+subfolder="test_run"           # Name subfolder as you like.
+
+## Choose the dataset
+dataset=something_v1
+#dataset=something_v2
+#dataset=cater_task2
+#dataset=cater_task2_cameramotion
+
+## Choose the model
+model=tsn_resnet50
+#model=trn_resnet50
+#model=mtrn_resnet50
+#model=tsm_resnet50_nopartialbn     # NOTE: use tsm_resnet50 for CATER experiments
+#model=mvf_resnet50_nopartialbn     # NOTE: use mvf_resnet50 for CATER experiments
+
+## Choose the sampling method.
+## NOTE: Use 32 frame for CATER experiments.
+exp_name="RGB_8frame"
+#exp_name="TC_8frame"
+#exp_name="TCPlus2_8frame"
+#exp_name="GreyST_8frame"
+
+# Training script
+# -S creates a subdirectory in the name of your choice. (optional)
+tools/run_singlenode.sh train $num_gpus -R $exp_root -D $dataset -M $model -E $exp_name -c:e tcgrey -S "$subfolder" #--wandb_project kiyoon_kim_tcgrey
+
+# Evaluating script
+# -l -2 loads the best model
+# -p saves the predictions. (optional)
+tools/run_singlenode.sh eval $num_gpus -R $exp_root -D $dataset -M $model -E $exp_name -c:e tcgrey -S "$subfolder" -l -2 -p #--wandb
+```
+
+## Citing the paper
+
+If you find our work or code useful, please cite:
+
+```BibTeX
+@inproceedings{kim2022capturing,
+  title={Capturing Temporal Information in a Single Frame: Channel Sampling Strategies for Action Recognition},
+  author={Kim, Kiyoon and Gowda, Shreyank N and Mac Aodha, Oisin and Sevilla-Lara, Laura},
+  booktitle={British Machine Vision Conference (BMVC)},
+  year={2022}
+}
+```
+
+## Framework Used
+This repository is a fork of [PyVideoAI framework](https://github.com/kiyoon/PyVideoAI).  
+Learn how to use it with [PyVideoAI-examples notebooks](https://github.com/kiyoon/PyVideoAI-examples).

@@ -123,10 +123,12 @@ If you find our work or code useful, please cite:
 
 ```BibTeX
 @inproceedings{kim2022capturing,
-  title={Capturing Temporal Information in a Single Frame: Channel Sampling Strategies for Action Recognition},
-  author={Kim, Kiyoon and Gowda, Shreyank N and Mac Aodha, Oisin and Sevilla-Lara, Laura},
-  booktitle={British Machine Vision Conference (BMVC)},
-  year={2022}
+  author    = {Kiyoon Kim and Shreyank N Gowda and Oisin Mac Aodha and Laura Sevilla-Lara},
+  title     = {Capturing Temporal Information in a Single Frame: Channel Sampling Strategies for Action Recognition},
+  booktitle = {33rd British Machine Vision Conference 2022, {BMVC} 2022, London, UK, November 21-24, 2022},
+  publisher = {{BMVA} Press},
+  year      = {2022},
+  url       = {https://bmvc2022.mpi-inf.mpg.de/0355.pdf}
 }
 ```
 
